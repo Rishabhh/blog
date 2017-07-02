@@ -42,54 +42,19 @@ def valid_year(year):
 				return years	
 
 
-form=""" 
+form= """
 <form method ="post">
 	<h1>When is your birthday ? </h1>
 
 	<br>
 	
-	<label> Month*
-	<input type="text" name='month'>
-	</label>
+	<label> Month* <input type="text" name='month'></label>
 
-	<label> Date
-	<input type="text" name='day'>
-	</label>
+	<label> Date <input type="text" name='day'></label>
 
-	<label> Year*
-	<input type="text" name='year'>
-	</label>
+	<label> Year* <input type="text" name='year'></label>
 	
-	<br>
-	*Please write Month and Year in full form eg: November 15 1993
-	<br>
-	<br>
-	<input type="Submit">
-</form>
-
- """
-form1=""" 
-<form method ="post">
-	<strong> *You entered Invalid Data</strong>
-	<br>
-	<h1>When is your birthday ? </h1>
-
-	<br>
-	
-	<label> Month*
-	<input type="text" name='month'>
-	</label>
-
-	<label> Date
-	<input type="text" name='day'>
-	</label>
-
-	<label> Year*
-	<input type="text" name='year'>
-	</label>
-	
-	<br>
-	*Please write Month and Year in full form eg: November 15 1993
+	<div style= "color:red"> %(error)s </div>
 	<br>
 	<br>
 	<input type="Submit">
@@ -97,21 +62,6 @@ form1="""
 
  """
 
-bdayCard = """
-
-	
-<!DOCTYPE html>
-<html style="height : 100% ; width : 100%">
-<head>
-	<title></title>
-</head>
-<body style="height : 100% ; width : 100%">
-<!-- <div ><img src="https://asset.holidaycardsapp.com/assets/card/b_day145-0fcc7a4d4e2aad6582ff698900f5d844.png"></div> -->
-<div style="height:100%"><iframe src="https://giphy.com/embed/IQF90tVlBIByw" width="100%" height="100%" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/minions-gif-IQF90tVlBIByw">via GIPHY</a></p></div>
-</body>
-</html>
-
- """
 
 # request is the object representing the request that came from browser
 #we call "get" on it to get query parameters
@@ -127,10 +77,12 @@ bdayCard = """
 class MainPage(webapp2.RequestHandler):
 	# when we open MainPage , the browser make a GET Request by default hence we define the get method
 	
+	def write_form(self,error=""):
+		self.response.out.write(form % {"error":error})
 	
 	def get(self):
 	   # self.response.headers['Content-Type'] = 'text/plain'
-		self.response.write(form)
+		self.write_form()
 
 	def post(self):
 		
@@ -141,9 +93,7 @@ class MainPage(webapp2.RequestHandler):
 		
 
 		if not (user_month and user_day and user_year):
-			self.response.out.write(form1)
-		elif (user_month==now.strftime("%B") and user_day==now.day):
-			self.response.out.write(bdayCard)
+			self.write_form("That dosen't look valid to me, friend !")
 		else:
 			self.response.out.write("Thanks for entering valid date")
 
